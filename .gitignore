@@ -5,6 +5,9 @@
 /.idea/*
 
 # Data which is generated our scripts and does not need to be tracked
+/datasets/clinical/*.tsv
+
+# WILL BE UPDATED SOON TO MATCH THE DATASET PATTERN ABOVE
 /softseg_data/*.tsv
 /softseg_data/*.csv
 /softseg_data/*.json
