@@ -2,10 +2,26 @@
 /debug/*
 /testing/output/output.db
 /testing/private/*
+
+# PyCharm stuff which will be custom per-person
 /.idea/*
 
-# Data which is generated our scripts and does not need to be tracked
+# Data which is generated our scripts which does not need to be tracked
+/datasets/clinical/*.csv
 /datasets/clinical/*.tsv
+/datasets/clinical/*.json
+/datasets/deepseg_binary/c2c6/*.csv
+/datasets/deepseg_binary/c2c6/*.tsv
+/datasets/deepseg_binary/c2c6/*.json
+/datasets/deepseg_binary/c2c7/*.csv
+/datasets/deepseg_binary/c2c7/*.tsv
+/datasets/deepseg_binary/c2c7/*.json
+/datasets/deepseg_soft/c2c6/*.csv
+/datasets/deepseg_soft/c2c6/*.tsv
+/datasets/deepseg_soft/c2c6/*.json
+/datasets/deepseg_soft/c2c7/*.csv
+/datasets/deepseg_soft/c2c7/*.tsv
+/datasets/deepseg_soft/c2c7/*.json
 
 # WILL BE UPDATED SOON TO MATCH THE DATASET PATTERN ABOVE
 /softseg_data/*.tsv
@@ -26,10 +42,12 @@
 
 # Python notebook checkpoints of questionable utility
 /results/.ipynb_checkpoints/
-/softseg_data/.ipynb_checkpoints/
-/softseg_data/c2c7/.ipynb_checkpoints/
-/deepseg_data/.ipynb_checkpoints/
-/deepseg_data/c2c7/.ipynb_checkpoints/
+/datasets/clinical/.ipynb_checkpoints/
+/datasets/deepseg_binary/c2c6/.ipynb_checkpoints/
+/datasets/deepseg_binary/c2c7/.ipynb_checkpoints/
+/datasets/deepseg_soft/c2c6/.ipynb_checkpoints/
+/datasets/deepseg_soft/c2c7/.ipynb_checkpoints/
 
 # Path to the tool, currently stored within the repo's direcotry for ease of access. LIKELY TO CHANGE SOON(tm)
 /modular_optuna_ml/*
+
