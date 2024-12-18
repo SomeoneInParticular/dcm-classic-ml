@@ -48,7 +48,13 @@ The scripts, data, and analyses presented in this repo were used to generate and
      * Data subset
        * Imaging-only
        * Clinical-only (in this case all imaging-related "permutation" labels are filled with "none")
-       * Full 
+       * Full
+     * Segmentation Procedure
+       * DeepSeg (all parameters left as default)
+       * SoftSeg (DeepSeg, but with the `-thr` parameter set to 0 to allow for 'soft' (non-binary) segmentation)
+     * Vertebral Range
+       * C2-C6
+       * C2-C7
      * MRI modality:
        * T1 Sagittal
        * T2 Sagittal
@@ -65,8 +71,7 @@ The scripts, data, and analyses presented in this repo were used to generate and
        * K-Nearest Neighbor
        * Random Forest
        * AdaBoost
-   * 175 total permutations
-     * While Issue #10 remains, this will be closer to 140 permutations, as 35 of them rely on said pre-processing method. With the random seed we chose, 155 permutations ran to completion.
+   * 625 total permutations (300 imaging-only + 25 clinical-only + 300 imaging+clinical)
 
 ## Results Interpretation
 
