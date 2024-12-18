@@ -10,18 +10,23 @@
 /datasets/clinical/*.csv
 /datasets/clinical/*.tsv
 /datasets/clinical/*.json
+/datasets/clinical/configs/
 /datasets/deepseg_binary/c2c6/*.csv
 /datasets/deepseg_binary/c2c6/*.tsv
 /datasets/deepseg_binary/c2c6/*.json
+/datasets/deepseg_binary/c2c6/configs/
 /datasets/deepseg_binary/c2c7/*.csv
 /datasets/deepseg_binary/c2c7/*.tsv
 /datasets/deepseg_binary/c2c7/*.json
+/datasets/deepseg_binary/c2c7/configs/
 /datasets/deepseg_soft/c2c6/*.csv
 /datasets/deepseg_soft/c2c6/*.tsv
 /datasets/deepseg_soft/c2c6/*.json
+/datasets/deepseg_soft/c2c6/configs/
 /datasets/deepseg_soft/c2c7/*.csv
 /datasets/deepseg_soft/c2c7/*.tsv
 /datasets/deepseg_soft/c2c7/*.json
+/datasets/deepseg_soft/c2c7/configs/
 
 # WILL BE UPDATED SOON TO MATCH THE DATASET PATTERN ABOVE
 /softseg_data/*.tsv
@@ -50,4 +55,3 @@
 
 # Path to the tool, currently stored within the repo's direcotry for ease of access. LIKELY TO CHANGE SOON(tm)
 /modular_optuna_ml/*
-
