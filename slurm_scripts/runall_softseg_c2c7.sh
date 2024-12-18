@@ -18,8 +18,7 @@ conda activate classic_ml_reloaded
 
 # Enter the SCT Processing directory:
 OLD_DIR=$PWD
-# CHANGE THIS TO MATCH YOUR INSTALL PATH
-cd ~/classic_ml_reloaded/sct_processing
+cd ~/dcm-classic-ml/ # This may need to be changed if you renamed the directory you cloned the repo too
 
 # Get the number of data files, as its the basis of our modulo
 N_DATA_CONFIGS=`ls softseg_data/c2c7/*.json | wc -l`
@@ -35,6 +34,6 @@ MODEL_FILE=`ls models/*.json | head -n $MODEL_IDX | tail -n 1`
 # All jobs in this script use the same study configuration
 STUDY_FILE="study/study_config.json"
 
-echo "../run_ml_analysis.py -d $DATA_FILE -m $MODEL_FILE -s $STUDY_FILE --overwrite"
+echo "modular_optuna_ml/run_ml_analysis.py -d $DATA_FILE -m $MODEL_FILE -s $STUDY_FILE --overwrite"
 
-python ../run_ml_analysis.py -d "$DATA_FILE" -m "$MODEL_FILE" -s "$STUDY_FILE" --overwrite
+python modular_optuna_ml/run_ml_analysis.py -d "$DATA_FILE" -m "$MODEL_FILE" -s "$STUDY_FILE" --overwrite
