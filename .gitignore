@@ -44,6 +44,7 @@
 /results/figures/
 /participants.tsv
 /results.db
+/datasets/_utils/run_ml_study.sl
 
 # Python notebook checkpoints of questionable utility
 /results/.ipynb_checkpoints/
@@ -55,3 +56,4 @@
 
 # Path to the tool, currently stored within the repo's direcotry for ease of access. LIKELY TO CHANGE SOON(tm)
 /modular_optuna_ml/*
+
