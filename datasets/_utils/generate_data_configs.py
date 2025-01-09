@@ -10,23 +10,13 @@ TEMPLATE = {
   "format": "tabular",
   "data_source": None,
   "separator": "\t",
+  "index": "GRP",
   "pre_split_hooks": [],
   "post_split_hooks": []
 }
 
 
 # === PRE-SPLIT HOOKS === #
-def init_presplit(config: dict):
-    # Isolate the pre_split_hook list
-    pre_split_hooks = config['pre_split_hooks']
-
-    # By default, the feature list designates that the GRP column be explicitly dropped
-    pre_split_hooks.append({
-        "type": "drop_features_explicit",
-        "features": ['GRP']
-    })
-
-
 def update_presplit_clinical(config: dict):
     # Isolate the pre_split_hook list
     pre_split_hooks = config['pre_split_hooks']
@@ -200,9 +190,6 @@ def main(search_pattern: str, output_dir: Path, label: str, has_clinical: bool, 
             base_config['label'] += p_name
         else:
             base_config['label'] += '_' + p_name
-
-        # Initialize our pre-split hooks
-        init_presplit(base_config)
 
         # If this is a clinical dataset, add the corresponding data hooks
         if has_clinical:
