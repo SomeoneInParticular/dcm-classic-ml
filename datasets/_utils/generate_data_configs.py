@@ -196,7 +196,10 @@ def main(search_pattern: str, output_dir: Path, label: str, has_clinical: bool, 
 
         # Extend the label with the name of the file
         p_name = p.name.split('.')[0]
-        base_config['label'] += '_' + p_name
+        if label == '':
+            base_config['label'] += p_name
+        else:
+            base_config['label'] += '_' + p_name
 
         # Initialize our pre-split hooks
         init_presplit(base_config)
