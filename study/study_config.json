@@ -16,7 +16,12 @@
       "balanced_accuracy",
       "roc_auc",
       "log_loss",
-      "importance_by_permutation"
+      "importance_by_permutation",
+      "sk_precision_perclass",
+      "sk_recall_perclass",
+      "sk_f1_perclass",
+      "correct_samples",
+      "incorrect_samples"
     ]
   },
   "track_params": true,
