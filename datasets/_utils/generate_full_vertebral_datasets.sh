@@ -1,5 +1,5 @@
 # For each image-derived dataset...
-for f in ../cleaned/*/vert_only*.tsv; do
+for f in ../cleaned/*/vertebral/vert_only*.tsv; do
   # Determine the root path and label for the file
   root_path=${f%*/*}
   label=${f#*vert_only*}
