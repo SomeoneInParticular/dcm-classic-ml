@@ -95,8 +95,7 @@ def main(input_file: Path, output_path: Path, label: str):
     for idx, df in result_df.reset_index().groupby(['acq', 'weight']):
         # If there are less than 50 samples for this grouping, skip over it with a message
         n = df.shape[0]
-        # if n < 50:
-        if n < 2:
+        if n < 50:
             print(f"Orientation '{idx[0]}' and weight '{idx[1]}' had only {n} samples, and was skipped.")
             continue
         # Otherwise, track the results by a label (being the combination of orientation and weight)
