@@ -29,19 +29,19 @@ echo "## DeepSeg Binary C2C6 - Per-Slice ##"
 python perslice_cleanup.py \
   -i ../raw/deepseg_binary_c2c6/perslice.csv \
   -o ../cleaned/deepseg_binary_c2c6/perslice/ \
-  --label 'vert_only'
+  --label 'slice_only'
 echo "## DeepSeg Binary C2C7 - Per-Slice ##"
 python perslice_cleanup.py \
   -i ../raw/deepseg_binary_c2c7/perslice.csv \
   -o ../cleaned/deepseg_binary_c2c7/perslice/ \
-  --label 'vert_only'
+  --label 'slice_only'
 echo "## DeepSeg Soft C2C6 - Per-Slice ##"
 python perslice_cleanup.py \
   -i ../raw/deepseg_soft_c2c6/perslice.csv \
   -o ../cleaned/deepseg_soft_c2c6/perslice/ \
-  --label 'vert_only'
+  --label 'slice_only'
 echo "## DeepSeg Soft C2C7 - Per-Slice ##"
 python perslice_cleanup.py \
   -i ../raw/deepseg_soft_c2c7/perslice.csv \
   -o ../cleaned/deepseg_soft_c2c7/perslice/ \
-  --label 'vert_only'
+  --label 'slice_only'
