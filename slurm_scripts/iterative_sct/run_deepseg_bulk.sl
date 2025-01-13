@@ -20,6 +20,9 @@ for f in ../deepseg/*/*/*.sh; do
 	log_label=${log_label%*.*}
 	log_label=${log_label//\//_}
 
+  # Echo the job script's name for easier debugging
+  echo "Starting job $log_label!"
+
 	# Run the script on out entire cMRI dataset
 	python iterative_sct.py \
 		-i "/work/cadotte_lab/bids_cmri/sourcedata" \
@@ -28,4 +31,7 @@ for f in ../deepseg/*/*/*.sh; do
 		-s "$f" \
 		-sct "/work/cadotte_lab/tools/spinalcordtoolbox-6.5/bin" \
 		-l "$log_label.log"
+
+	# Delete any crap SCT put here, rather than where we told it to (issue has been reported)
+	rm -r sct_*
 done
