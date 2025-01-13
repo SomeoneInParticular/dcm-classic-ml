@@ -47,7 +47,7 @@ fi
 PER_SLICE_OUT_NAME="softseg_slice_metrics.csv"
 PER_SLICE_OUT_FILE="$OUT_FOLDER/$PER_SLICE_OUT_NAME"
 
-# Use those labels alongside the segmentation to generate per-vertebrae metrics
+# Use those labels alongside the segmentation to generate per-slice metrics
 if [ ! -f "$PER_SLICE_OUT_FILE" ]; then
   echo "Beginning segmentation processing"
   OLD_DIR=$PWD
