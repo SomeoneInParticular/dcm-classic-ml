@@ -7,6 +7,10 @@ for f in ../cleaned/*/perslice/slice_only*.tsv; do
   # Identify the output path for the result
   full_out="$root_path/full$label"
 
+  # Refine the imaging dataset to contain only surgical patients (using the clinical dataset as a reference) and our target metric
+  img_dataset="../cleaned/clinical_only.tsv"
+  python update_imaging_with_clinical.py -c "$img_dataset" -i "$f"
+
   # Run the joining script to join this file with clinical metrics from "clinical_only.tsv"
-  python join_by_grp.py -i1 "../cleaned/clinical_only.tsv" -i2 $f -o $full_out
+  python join_by_grp.py -i1 "$img_dataset" -i2 "$f" -o "$full_out"
 done

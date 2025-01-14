@@ -42,20 +42,6 @@ def update_presplit_clinical(config: dict):
     })
 
 
-def update_presplit_imaging(config: dict):
-    # Isolate the pre_split_hook list
-    pre_split_hooks = config['pre_split_hooks']
-
-    # The orientation and weight of the image is redundant, as the data has been isolated already
-    pre_split_hooks.append({
-        "type": "drop_features_explicit",
-        "features": [
-            "acq",
-            "weight"
-        ]
-    })
-
-
 def update_presplit_nullity(config: dict):
     # Isolate the pre_split_hook list
     pre_split_hooks = config['pre_split_hooks']
@@ -195,9 +181,6 @@ def main(search_pattern: str, output_dir: Path, label: str, has_clinical: bool, 
         if has_clinical:
             update_presplit_clinical(base_config)
             update_postsplit_clinical_ohe(base_config)
-        # If this is an imaging dataset, add the corresponding data hooks
-        if has_imaging:
-            update_presplit_imaging(base_config)
         # Add the remaining data hooks
         update_presplit_nullity(base_config)
         update_postsplit_fill_and_standardize(base_config)

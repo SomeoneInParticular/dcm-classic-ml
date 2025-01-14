@@ -108,7 +108,7 @@ def main(input_file: Path, output_path: Path, label: str):
     # Save the datasets which were found prior iteratively
     for k, df in img_dfs.items():
         output_file = output_path / f"{label}_{k}.tsv"
-        df.set_index('GRP').to_csv(output_file, sep='\t')
+        df.set_index('GRP').drop(columns=['acq', 'weight', 'run']).to_csv(output_file, sep='\t')
 
 
 if __name__ == '__main__':
