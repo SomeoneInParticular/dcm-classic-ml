@@ -11,7 +11,7 @@ The scripts, data, and analyses presented in this repo were used to generate and
       * `iterative_sct.py` is a replacement for SCT's `sct_run_batch` command, set to run for every _MRI_ sequence found within a BIDS-like subject directory (rather than for each subject directory). 
         * This is an optimization for running on highly-parallel systems, as iterating by directory requires more boolean logic and error checking than doing so by file. If you have a BIDS-like dataset + a `sct_run_batch` script already, its output will work just as well.
       * Four different analytical permutations exist currently, being a combination of the following options:
-        * `binary`, where the resulting segmentation is binarized, or `soft`, where it is not (see the documentation for SCT's `sct_deepseg` command for more details, available [here](https://spinalcordtoolbox.com/stable/user_section/command-line/sct_deepseg.html))
+        * `binary`, where the resulting segmentation is binarized, or `soft`, where it is not (see the documentation for SCT's `sct_deepseg` command for more details, available [here](https://spinalcordtoolbox.com/6.5/user_section/command-line/deepseg/seg_sc_contrast_agnostic.html)
         * Whether the segmentation ranges from the C2 to C6 vertebrae (`_c2c6`) or C2 to C7 vertebrae (`_c2c7`).
 4. The resulting metrics are collected and cleaned using the code provided in `softseg_data/data_cleaning.ipynb`. This process is summarized below:
     * Data in all resulting files for a given analytical permutation are concatenated together into a single csv file, with the resulting duplicate headers stripped
