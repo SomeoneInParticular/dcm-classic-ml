@@ -100,7 +100,7 @@ def slurm_main(
     DATA_FILE=`ls {resolved_data_glob} | head -n $DATA_IDX | tail -n 1`
     
     # Run the resulting script
-    python "{run_ml_analysis_path}" -d "$DATA_FILE" -m "$MODEL_FILE" -s "$STUDY_FILE" --overwrite
+    python "{run_ml_analysis_path}" -d "$DATA_FILE" -m "$MODEL_FILE" -s "$STUDY_FILE" --overwrite --timeout 300
     """))
 
 def debug_replicate_arrayjob(data_paths, model_paths, study_paths):

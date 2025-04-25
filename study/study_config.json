@@ -25,5 +25,5 @@
     ]
   },
   "track_params": true,
-  "output_path": "/home/kalum.ost/dcm-classic-ml/results.db"
+  "output_path": "/home/kalum.ost/projects/dcm-classic-ml/results/results.db"
 }

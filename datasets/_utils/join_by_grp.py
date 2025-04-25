@@ -11,6 +11,11 @@ def main(input_1, input_2, output):
     df2 = pd.read_csv(input_2, sep='\t')
     df2 = df2.set_index('GRP')
 
+    # If 'Recovery Class' is in both dataframe's already (it was run through 'update_imaging_with_clinical.py')
+    # remove one copy to avoid an error
+    if 'Recovery Class' in df1.columns and 'Recovery Class' in df2.columns:
+        df2 = df2.drop(columns=['Recovery Class'])
+
     # Join them on the patient's ID
     df_out = df1.join(df2, how='inner')
 

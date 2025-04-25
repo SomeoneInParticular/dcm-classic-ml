@@ -31,8 +31,8 @@ def parse_filenames(df):
     runs = [int(f[-3].split('-')[1]) if "run" in f[-3] else None for f in file_components]
 
     idx = pd.MultiIndex.from_tuples(
-        zip(patient_ids, acqs, contrasts, runs, df['VertLevel']),
-        names=['GRP', 'acq', 'weight', 'run', 'vert_level']
+        zip(patient_ids, acqs, contrasts, runs, df['Slice (I->S)'].astype('int32')),
+        names=['GRP', 'acq', 'weight', 'run', 'slice']
     )
     return idx
 
@@ -48,26 +48,51 @@ def main(input_file: Path, output_path: Path, label: str):
     df_idx = parse_filenames(init_df)
     init_df.index = df_idx
 
-    # Drop some metadata columns which aren't useful to the study
-    to_drop = ['Timestamp', 'SCT Version', 'Filename', 'Slice (I->S)', 'VertLevel', 'DistancePMJ']
+    # Drop some columns which aren't useful to the study
+    to_drop = ['Timestamp', 'SCT Version', 'Filename', 'Slice (I->S)', 'VertLevel', 'DistancePMJ', 'SUM(length)']
+    # Drop all variance-related metrics, as they cannot exist on per-slice measurements
+    for c in init_df.columns:
+        if "STD" in c:
+            to_drop.append(c)
     init_df = init_df.drop(to_drop, axis=1)
 
-    # Pivot the vertebral labels to be used as features, rather than samples
-    init_df = init_df.unstack(level='vert_level')
-    vert_label_cols = [f"{c[0]} [V{c[1]}]" for c in init_df.columns]
-    init_df.columns = vert_label_cols
+    # Reformat the columns to strip the (redundant) MEAN label
+    new_cols = [s.replace("MEAN(", '').replace(')', '') for s in init_df.columns]
+    init_df.columns = new_cols
 
-    # Unstack the indices, pivoting to only use the patient's ID as our index again
+    # Convert everything to floats, as (due to the headers) everything is as string right now
+    init_df = init_df.astype('float64')
+
+    # Reset the index in preparation for statistics calculation
     init_df = init_df.reset_index()
-    init_df = init_df.set_index('GRP')
 
-    # Group the dataframe by patient, contrast, and orientation, keeping only the last run if multiple exist
-    final_df = init_df.sort_values('run').groupby(['GRP', 'acq', 'weight']).last()
-    final_df = final_df.drop(columns=['run'])
+    # Group the results in preparation for statistics calculation
+    df_groups = init_df.groupby(['GRP', 'acq', 'weight', 'run'], dropna=False)
+
+    # Map of DF by statistic to make iteratively building up the dataframe easier later
+    stat_df_map = {
+        "Min.": df_groups.min(),
+        "Max.": df_groups.max(),
+        "Mean": df_groups.mean(),
+        "Std.": df_groups.std()
+    }
+
+    # Rename the columns of each dataframe in the map to include their respective statistic
+    for k, v in stat_df_map.items():
+        v.columns = [f"{c} ({k})" for c in v.columns]
+
+    # Append all the features together
+    result_df = pd.concat(stat_df_map.values(), axis=1)
+
+    # Sort the index alphabetically for easier review
+    result_df = result_df.reindex(sorted(result_df.columns), axis=1)
+
+    # Keep only the last run for each sample with multiple runs
+    result_df = result_df.reset_index().sort_values('run').groupby(['GRP', 'acq', 'weight']).last()
 
     # Split the dataset by contrast and orientation, saving the result only if 50 or more samples exist
     img_dfs = dict()
-    for idx, df in final_df.reset_index().groupby(['acq', 'weight']):
+    for idx, df in result_df.reset_index().groupby(['acq', 'weight']):
         # If there are less than 50 samples for this grouping, skip over it with a message
         n = df.shape[0]
         if n < 50:
@@ -83,7 +108,7 @@ def main(input_file: Path, output_path: Path, label: str):
     # Save the datasets which were found prior iteratively
     for k, df in img_dfs.items():
         output_file = output_path / f"{label}_{k}.tsv"
-        df.set_index('GRP').drop(columns=['acq', 'weight']).to_csv(output_file, sep='\t')
+        df.set_index('GRP').drop(columns=['acq', 'weight', 'run']).to_csv(output_file, sep='\t')
 
 
 if __name__ == '__main__':
