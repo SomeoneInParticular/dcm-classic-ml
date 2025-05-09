@@ -7,29 +7,30 @@ The scripts, data, and analyses presented in this repo were used to generate and
 1. Clinical diagnostic and MRI sequences of various sequencing modalities (Sagittal T1, Sagittal T2, Axial T2) were obtained from patients across Alberta.
 2. MRI sequences were automatically segmented using the Contrast Agnostic DeepSeg algorithm provided by the Spinal Cord Toolbox (SCT) release 6.5.
 3. The resulting segmentations were then used to estimate the spinal cord morphological metrics of patients in the dataset, using the `sct_process_segmentation` script provided by SCT.
-    * Steps 2 and 3 were completed using `iterative_sct.py` alongside one of the `process` scripts contained within`slurm_scripts`.
-      * `iterative_sct.py` is a replacement for SCT's `sct_run_batch` command, set to run for every _MRI_ sequence found within a BIDS-like subject directory (rather than for each subject directory). 
-        * This is an optimization for running on highly-parallel systems, as iterating by directory requires more boolean logic and error checking than doing so by file. If you have a BIDS-like dataset + a `sct_run_batch` script already, its output will work just as well.
-      * Four different analytical permutations exist currently, being a combination of the following options:
+    * Steps 2 and 3 were completed using `iterative_sct.py` alongside one of the `.sh` scripts contained within`slurm_scripts/deepseg`.
+      * `iterative_sct.py` is a replacement for SCT's `sct_run_batch` command, set to run for every _MRI_ sequence found within a BIDS-like subject directory (rather than for each subject directory); This is an optimization for running on highly-parallel systems, as iterating by directory requires more boolean logic and error checking than doing so by file. If you have a BIDS-like dataset + a `sct_run_batch` script already, its output will work just as well.
+      * Three different analytical permutations exist currently, being a combination of the following options:
         * `binary`, where the resulting segmentation is binarized, or `soft`, where it is not (see the documentation for SCT's `sct_deepseg` command for more details, available [here](https://spinalcordtoolbox.com/stable/user_section/command-line/sct_deepseg.html))
+        * Whether metrics were calculated on a per-vertebrae level (`vertebral`) or across the entire spine (`perslice`)
         * Whether the segmentation ranges from the C2 to C6 vertebrae (`_c2c6`) or C2 to C7 vertebrae (`_c2c7`).
-4. The resulting metrics are collected and cleaned using the code provided in `softseg_data/data_cleaning.ipynb`. This process is summarized below:
-    * Data in all resulting files for a given analytical permutation are concatenated together into a single csv file, with the resulting duplicate headers stripped
+4. The resulting metrics are collected and cleaned using the respective `_cleanup` scripts provided in `datasets/_utils/`. This process is summarized below:
+    * Data in all resulting files for a given analytical permutation are concatenated together into a single `.csv` file, with the resulting duplicate headers stripped.
     * Each metric file's name is parsed to identify which patient was associated with each MRI sequence, as well as the MRI sequences orientation (Axial or Sagittal), contrast (denoted as 'weight' in the tabular dataset, valued as T1 or T2), and run (if the patient had multiple runs of the same MRI orientation/contrast modality)
-      * If a patient has multiple runs for a given MRI modality, only the _last_ run is used.
-    * Remove descriptive-only features from the dataset which are not relevant for ML analysis
-    * Pivot the vertebral levels to be treated as distinct features, rather than distinct samples
-    * Calculate the Hirabayashi Recovery Ratio (HRR) for each patient, using the data contained within the BIDS dataset's `participants` file.
-      * HRR is the ratio of patient improvement ('post-operative mJOA' - 'initial mJOA') over the potential improvement that patient could have seen ('Max mJOA Score (18)' - 'initial mJOA')
-      * Any patients which lack either an initial or post-surgical mJOA are dropped at this point as well, as both are needed for calculating the HRR
-    * Whether a patient's HRR is greater than or equal to 0.5 is calculated; this threshold has been found to indicate a clinically significant improvement [(ref)](https://pubmed.ncbi.nlm.nih.gov/23942607/), and will be the prediction target for our ML analyses.
+      * If a patient has multiple runs for a given MRI modality, only the _last_ (most recently acquired) run is used.
+    * Remove descriptive-only features from the dataset which are not relevant for ML analysis.
+    * Run processing steps which are specific to the type of data being cleaned:
+      * **Per-Vertebrae Metrics:** Pivot the vertebral levels to be treated as distinct features, rather than distinct samples
+      * **Clinical Metrics:** Calculate the Hirabayashi Recovery Ratio (HRR) for each patient, using the data contained within the BIDS dataset's `participants` file.
+        * HRR is the ratio of patient improvement ('post-operative mJOA' - 'initial mJOA') over the potential improvement that patient could have seen ('Max mJOA Score (18)' - 'initial mJOA')
+        * Any patients which lack either an initial or post-surgical mJOA are dropped at this point as well, as both are needed for calculating the HRR
+        * Whether a patient's HRR is greater than or equal to 0.5 is calculated; this threshold has been found to indicate a clinically significant improvement [(ref)](https://pubmed.ncbi.nlm.nih.gov/23942607/), and will be the prediction target for our ML analyses.
     * Any patients which did not undergo surgical treatment are dropped from the dataset
     * Any features collected after surgery (aside from the aforementioned patient HRR) are dropped, as it would not be available to the ML model when it makes its prediction.
     * Three kinds of datasets are generated from combining these datasets together
       * Imaging only: contains only morphometrics derived from a single MRI modality (MRI orientation + contrast) for each patient which had an MRI sequence for that modality (i.e. spinal cord diameter, angle, etc.). One sub-set is generated per modality (3 total)
       * Clinical only: contains only non-imaging derived metrics (i.e. sex, age, symptom severity etc.) for each patient.
       * Full: Contains both of the prior for each patient, for each MRI modality the patient had. One subset is generated per modality (3 total) 
-5. Dataset configurations files are generated for each dataset via `datasets/_utils/generate_data_configs.py`. These configus designate the following to be done for all datasets available:
+5. Dataset configurations files are generated for each dataset via `datasets/_utils/generate_data_configs.py`. These configuration files designate the following to be done for all datasets available:
    * Explicit dropping of redundant meta-features (such as where the data was acquired) and features which would not be available pre-surgery (such as whether the patient follow-up up 1 month later)
    * Any features which, post in-out split, are missing more than 50% of their sample values are dropped
    * Any samples which, post in-out split, are missing more than 50% of their features are dropped
